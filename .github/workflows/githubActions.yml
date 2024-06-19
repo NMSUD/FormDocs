@@ -1,0 +1,77 @@
+name: Pull form documentation
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    environment: github-pages
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "NMSUD/Form"
+          path: nmsud-form
+          ref: main
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: nmsud-form/package-lock.json
+
+      - name: Setup variables
+        run: |
+          cnameUrl=$(cat ./CNAME)
+          echo "CNAME_URL=${cnameUrl}" >> $GITHUB_ENV
+
+      - name: Create output folder
+        run: |
+          mkdir pages
+          cp -r ./nmsud-form/public/assets ./pages
+          cp ./CNAME ./pages/CNAME
+          touch ./pages/.nojekyll
+
+      - name: Install npm packages
+        run: |
+          cd nmsud-form
+          npm ci
+
+      - name: Set up documentation pages
+        run: |
+          cd nmsud-form
+          echo "[coverage report](https://${{ env.CNAME_URL }}/coverage/index.html)" > ./docs/generated.md
+          echo "[view the hosted Storybook page](https://${{ env.CNAME_URL }}/storybook)" >> ./docs/generated.md
+          echo "![codeCoverageBadge](https://img.shields.io/endpoint?url=https%3A%2F%2F{{ env.CNAME_URL }}%2Fcoverage%2FcoverageBadge.json)" >> ./docs/generated.md
+          npm run docs:build
+          cp -r ./.vitepress/dist/. ../pages/docs
+
+      - name: Create code coverage report
+        run: |
+          cd nmsud-form
+          npm run test:coverage
+          npm run test:coverage-badge
+          cp -r ./coverage ../pages/coverage
+
+      - name: Create Storybook export
+        run: |
+          cd nmsud-form
+          npm run storybook:build
+          cp -r ./storybook-static ../pages/storybook
+
+      - uses: JamesIves/github-pages-deploy-action@v4
+        name: Deploy to GitHub Pages
+        if: github.event_name != 'pull_request'
+        with:
+          folder: pages

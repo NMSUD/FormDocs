@@ -1,0 +1,15 @@
+node_modules
+/build
+/data
+/dist
+/temp
+.env
+.xata
+/coverage
+/storybook-static
+/.vitepress/cache
+/.vitepress/dist
+docs/.vitepress/cache
+docs/.vitepress/dist
+/.env.*
+vite.config.ts.*.mjs
