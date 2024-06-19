@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as r,a4 as l}from"./chunks/framework.BPyCXYKG.js";const b=JSON.parse('{"title":"Changelog","description":"","frontmatter":{},"headers":[],"relativePath":"CHANGELOG.md","filePath":"CHANGELOG.md"}'),o={name:"CHANGELOG.md"},i=l("",53),t=[i];function d(h,n,s,c,u,m){return r(),a("div",null,t)}const p=e(o,[["render",d]]);export{b as __pageData,p as default};
