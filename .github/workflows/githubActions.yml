@@ -54,7 +54,7 @@ jobs:
       - name: Set up documentation pages
         run: |
           cd nmsud-form
-          echo "${{ env.DOCUMENTATION_URL }}" > ./public/CNAME
+          echo "${{ env.CNAME_URL }}" > ./public/CNAME
           echo "[coverage report](https://${{ env.CNAME_URL }}/coverage/index.html)" > ./docs/generated.md
           echo "[view the hosted Storybook page](https://${{ env.CNAME_URL }}/storybook)" >> ./docs/generated.md
           echo "![codeCoverageBadge](https://img.shields.io/endpoint?url=https%3A%2F%2F${{ env.CNAME_URL }}%2Fcoverage%2FcoverageBadge.json)" >> ./docs/generated.md
