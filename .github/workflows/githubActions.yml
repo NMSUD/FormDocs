@@ -31,17 +31,18 @@ jobs:
           cache: "npm"
           cache-dependency-path: nmsud-form/package-lock.json
 
-      - name: Setup variables
-        run: |
-          cnameUrl=$(cat ./CNAME)
-          echo "CNAME_URL=${cnameUrl}" >> $GITHUB_ENV
-
       - name: Create output folder
         run: |
           mkdir pages
           cp -r ./nmsud-form/public/assets ./pages
           cp ./CNAME ./pages/CNAME
           touch ./pages/.nojekyll
+
+      - name: Setup variables
+        run: |
+          cd nmsud-form
+          cnameUrl=$(cat ./CNAME)
+          echo "CNAME_URL=${cnameUrl}" >> $GITHUB_ENV
 
       - name: Install npm packages
         run: |
